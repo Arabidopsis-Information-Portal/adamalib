@@ -4,3 +4,6 @@
 __author__ = 'Walter Moreira'
 __email__ = 'walter@waltermoreira.net'
 __version__ = '0.1.0'
+
+
+from .adamalib import Adama
