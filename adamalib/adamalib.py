@@ -45,7 +45,8 @@ class Adama(object):
         return self.get('/status').json()
 
     def namespaces(self):
-        return []
+        nss = self.get('/namespaces').json()['result']
+        return [Namespace(self, ns['name']) for ns in nss]
 
     def __getattr__(self, item):
         """
@@ -65,7 +66,6 @@ class Namespace(object):
         """
         self.adama = adama
         self.namespace = namespace
-        self._preload()
 
     def _preload(self):
         self._ns_info = self.adama.get('/{}'.format(self.namespace)).json()
@@ -75,6 +75,7 @@ class Namespace(object):
         :type item: str
         :rtype: Service
         """
+        # preload here with cache
         return Service(self, item)
 
 
