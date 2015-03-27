@@ -63,7 +63,7 @@ class Adama(object):
         :type kwargs: dict
         :rtype: requests.Response
         """
-        return requests.post(self.url + url, data=kwargs)
+        return requests.post(self.url + url, **kwargs)
 
     @property
     def status(self):
@@ -89,7 +89,7 @@ class Namespaces(list):
         self.adama = adama
 
     def add(self, **kwargs):
-        response = self.adama.post('/namespaces', **kwargs)
+        response = self.adama.post('/namespaces', data=kwargs)
         json_response = response.json()
         if json_response['status'] != 'success':
             self.adama.error(json_response['message'], json_response)
