@@ -27,12 +27,13 @@ class Adama(object):
     def utils(self):
         return Utils(self)
 
-    def error(self, message):
+    def error(self, message, obj=None):
         """
         :type message: str
+        :type obj: object
         :rtype: None
         """
-        raise APIException(message)
+        raise APIException(message, obj)
 
     def get(self, url, **kwargs):
         """
@@ -52,7 +53,7 @@ class Adama(object):
         """
         response = self.get(url, **kwargs).json()
         if response['status'] != 'success':
-            raise APIException(response['message'], response)
+            self.error(response['message'], response)
         return response
 
     def status(self):
@@ -165,11 +166,11 @@ class Endpoint(object):
             self.service.version, self.endpoint),
             params=kwargs)
         if not response.ok:
-            raise APIException(response.text, response)
+            self.adama.error(response.text, response)
         if self.service.type in ('query', 'map_filter'):
             json_response = response.json()
             if json_response['status'] != 'success':
-                raise APIException(json_response['message'], json_response)
+                self.adama.error(json_response['message'], json_response)
             return json_response['result']
         else:
             return response
@@ -191,7 +192,6 @@ class Utils(object):
         :rtype: requests.Response
         """
         resp = requests.get(url, params=kwargs)
-        if resp.ok:
-            return resp
-        else:
-            self.adama.error(resp.text)
+        if not resp.ok:
+            self.adama.error(resp.text, resp)
+        return resp
