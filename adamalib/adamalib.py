@@ -57,13 +57,22 @@ class Adama(object):
             self.error(response['message'], response)
         return response
 
+    def post(self, url, **kwargs):
+        """
+        :type url: str
+        :type kwargs: dict
+        :rtype: requests.Response
+        """
+        return requests.post(self.url + url, data=kwargs)
+
+    @property
     def status(self):
         return self.get_json('/status')
 
     @property
     def namespaces(self):
         nss = self.get_json('/namespaces')['result']
-        return [Namespace(self, ns['name']) for ns in nss]
+        return Namespaces(self, [Namespace(self, ns['name']) for ns in nss])
 
     def __getattr__(self, item):
         """
@@ -71,6 +80,20 @@ class Adama(object):
         :rtype: Namespace
         """
         return Namespace(self, item)
+
+
+class Namespaces(list):
+
+    def __init__(self, adama, *args, **kwargs):
+        super(Namespaces, self).__init__(*args, **kwargs)
+        self.adama = adama
+
+    def add(self, **kwargs):
+        response = self.adama.post('/namespaces', **kwargs)
+        json_response = response.json()
+        if json_response['status'] != 'success':
+            self.adama.error(json_response['message'], json_response)
+        return Namespace(self.adama, kwargs['name'])
 
 
 class Namespace(object):
