@@ -93,7 +93,6 @@ class Namespace(object):
         """
         :rtype: dict
         """
-        print("loading namespace info")
         info = self.adama.get_json('/{}'.format(self.namespace))
         self.__dict__.update(info['result'])
         return info
@@ -130,7 +129,6 @@ class Service(object):
         """
         :rtype: dict
         """
-        print("loading service info")
         info = self.namespace.adama.get_json('/{}/{}_v{}'.format(
             self.namespace.namespace, self.service, self._version))
         self.__dict__.update(info['result']['service'])
