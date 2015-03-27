@@ -112,7 +112,8 @@ class Namespace(object):
     def services(self):
         srvs = self.adama.get_json(
             '/{}/services'.format(self.namespace))['result']
-        return [Service(self, srv['name']) for srv in srvs]
+        return Services(self.adama, self.namespace,
+                        [Service(self, srv['name']) for srv in srvs])
 
     def _preload(self):
         """
@@ -131,6 +132,31 @@ class Namespace(object):
             self._ns_info = self._preload()
             return getattr(self, item)
         return Service(self, item)
+
+
+class Services(list):
+
+    def __init__(self, adama, namespace, *args, **kwargs):
+        super(Services, self).__init__(*args, **kwargs)
+        self.adama = adama
+        self.namespace = namespace
+
+    def add(self, mod):
+        """
+        :type mod: module
+        :rtype: Service
+        """
+        code, name, typ = find_code(mod)
+        response = self.adama.post(
+            '/{}/services'.format(self.namespace),
+            files={'code': code}, data={'type': typ})
+        try:
+            json_response = response.json()
+        except ValueError:
+            return self.adama.error(response.text, response)
+        if json_response['status'] != 'success':
+            return self.adama.error(json_response['message'], json_response)
+        return Service(self.namespace, name)
 
 
 class Service(object):
@@ -219,3 +245,7 @@ class Utils(object):
         if not resp.ok:
             self.adama.error(resp.text, resp)
         return resp
+
+
+def find_code(mod):
+    return None, '', None
