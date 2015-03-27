@@ -5,7 +5,10 @@ import requests
 
 
 class APIException(Exception):
-    pass
+
+    def __init__(self, msg, obj=None):
+        super(APIException, self).__init__(msg)
+        self.obj = obj
 
 
 # noinspection PyMethodMayBeStatic
@@ -41,11 +44,23 @@ class Adama(object):
         headers['Authorization'] = 'Bearer {}'.format(self.token)
         return requests.get(self.url + url, **kwargs)
 
-    def status(self):
-        return self.get('/status').json()
+    def get_json(self, url, **kwargs):
+        """
+        :type url: str
+        :type kwargs: dict[str, object]
+        :rtype: dict
+        """
+        response = self.get(url, **kwargs).json()
+        if response['status'] != 'success':
+            raise APIException(response['message'], response)
+        return response
 
+    def status(self):
+        return self.get_json('/status')
+
+    @property
     def namespaces(self):
-        nss = self.get('/namespaces').json()['result']
+        nss = self.get_json('/namespaces')['result']
         return [Namespace(self, ns['name']) for ns in nss]
 
     def __getattr__(self, item):
@@ -66,16 +81,31 @@ class Namespace(object):
         """
         self.adama = adama
         self.namespace = namespace
+        self._ns_info = None
+
+    @property
+    def services(self):
+        srvs = self.adama.get_json(
+            '/{}/services'.format(self.namespace))['result']
+        return [Service(self, srv['name']) for srv in srvs]
 
     def _preload(self):
-        self._ns_info = self.adama.get('/{}'.format(self.namespace)).json()
+        """
+        :rtype: dict
+        """
+        print("loading namespace info")
+        info = self.adama.get_json('/{}'.format(self.namespace))
+        self.__dict__.update(info['result'])
+        return info
 
     def __getattr__(self, item):
         """
         :type item: str
         :rtype: Service
         """
-        # preload here with cache
+        if not item.startswith('_') and self._ns_info is None:
+            self._ns_info = self._preload()
+            return getattr(self, item)
         return Service(self, item)
 
 
@@ -89,12 +119,31 @@ class Service(object):
         """
         self.namespace = namespace
         self.service = service
+        self._srv_info = None
+        self._version = '0.1'
+
+    def __getitem__(self, item):
+        self._version = item
+        return self
+
+    def _preload(self):
+        """
+        :rtype: dict
+        """
+        print("loading service info")
+        info = self.namespace.adama.get_json('/{}/{}_v{}'.format(
+            self.namespace.namespace, self.service, self._version))
+        self.__dict__.update(info['result']['service'])
+        return info
 
     def __getattr__(self, item):
         """
         :type item: str
         :rtype:
         """
+        if not item.startswith('_') and self._srv_info is None:
+            self._srv_info = self._preload()
+            return getattr(self, item)
         return Endpoint(self, item)
 
 
