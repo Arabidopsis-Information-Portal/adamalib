@@ -42,6 +42,7 @@ class Adama(object):
         :rtype: requests.Response
         """
         headers = kwargs.setdefault('headers', {})
+        """:type : dict"""
         headers['Authorization'] = 'Bearer {}'.format(self.token)
         return requests.get(self.url + url, **kwargs)
 
