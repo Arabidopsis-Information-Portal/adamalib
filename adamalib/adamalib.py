@@ -116,7 +116,7 @@ class Service(object):
         :type service: str
         :rtype: None
         """
-        self.namespace = namespace
+        self._namespace = namespace
         self.service = service
         self._srv_info = None
         self._version = '0.1'
@@ -129,8 +129,8 @@ class Service(object):
         """
         :rtype: dict
         """
-        info = self.namespace.adama.get_json('/{}/{}_v{}'.format(
-            self.namespace.namespace, self.service, self._version))
+        info = self._namespace.adama.get_json('/{}/{}_v{}'.format(
+            self._namespace.namespace, self.service, self._version))
         self.__dict__.update(info['result']['service'])
         return info
 
