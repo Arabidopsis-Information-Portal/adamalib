@@ -145,6 +145,7 @@ class Service(object):
         return Endpoint(self, item)
 
 
+# noinspection PyProtectedMember
 class Endpoint(object):
 
     def __init__(self, service, endpoint):
@@ -155,9 +156,23 @@ class Endpoint(object):
         """
         self.service = service
         self.endpoint = endpoint
+        self.namespace = self.service._namespace
+        self.adama = self.service._namespace.adama
 
     def __call__(self, **kwargs):
-        pass
+        response = self.adama.get('/{}/{}_v{}/{}'.format(
+            self.namespace.name, self.service.name,
+            self.service.version, self.endpoint),
+            params=kwargs)
+        if not response.ok:
+            raise APIException(response.text, response)
+        if self.service.type in ('query', 'map_filter'):
+            json_response = response.json()
+            if json_response['status'] != 'success':
+                raise APIException(json_response['message'], json_response)
+            return json_response['result']
+        else:
+            return response
 
 
 class Utils(object):
