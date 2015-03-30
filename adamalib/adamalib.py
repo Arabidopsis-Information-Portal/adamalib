@@ -71,6 +71,13 @@ class Adama(object):
         """
         return requests.post(self.url + url, **kwargs)
 
+    def delete(self, url):
+        """
+        :type url: str
+        :rtype: None
+        """
+        requests.delete(self.url + url)
+
     @property
     def status(self):
         return self.get_json('/status')
