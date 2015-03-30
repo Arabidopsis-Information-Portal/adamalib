@@ -1,4 +1,7 @@
+gnureadline==6.3.3
+ipython==3.0.0
 py==1.4.26
 pytest==2.6.4
+PyYAML==3.11
 requests==2.6.0
 wheel==0.24.0
