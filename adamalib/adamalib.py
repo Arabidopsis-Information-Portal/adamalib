@@ -225,6 +225,11 @@ class Service(object):
             return getattr(self, item)
         return Endpoint(self, item)
 
+    def delete(self):
+        self._namespace.adama.delete(self._full_name)
+        self._srv_info = None
+        self.service = '<deleted>'
+
 
 # noinspection PyProtectedMember
 class Endpoint(object):
