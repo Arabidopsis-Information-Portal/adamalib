@@ -146,6 +146,13 @@ class Namespace(object):
 class Services(list):
 
     def __init__(self, adama, namespace, *args, **kwargs):
+        """
+        :type adama: Adama
+        :type namespace: str
+        :type args: list
+        :type kwargs: dict
+        :rtype: None
+        """
         super(Services, self).__init__(*args, **kwargs)
         self.adama = adama
         self.namespace = namespace
