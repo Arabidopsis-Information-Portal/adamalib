@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
+import subprocess
+from contextlib import contextmanager
+import tarfile
+import tempfile
 
 import requests
+import yaml
 
 
 class APIException(Exception):
@@ -255,4 +261,65 @@ class Utils(object):
 
 
 def find_code(mod):
-    return None, '', None
+    """
+    :type mod: module
+    :rtype: (file, str, str)
+    """
+    mod_dir = os.path.dirname(os.path.abspath(mod.__file__))
+    toplevel_dir = git_top_level(mod_dir)
+    code = pack(toplevel_dir)
+    metadata = find_metadata(mod_dir, toplevel_dir)
+    name = metadata['name']
+    typ = metadata['type']
+    return code, name, typ
+
+
+def git_top_level(directory):
+    """
+    :type directory: str
+    :rtype: str
+    """
+    with chdir(directory):
+        try:
+            return subprocess.check_output(
+                'git rev-parse --show-toplevel'.split()).strip()
+        except subprocess.CalledProcessError:
+            raise APIException('module not in a git repository')
+
+
+def pack(directory):
+    """
+    :type directory: str
+    :rtype: file
+    """
+    temp = tempfile.mkdtemp()
+    tar_name = os.path.join(temp, 'code.tgz')
+    with chdir(directory), \
+            tarfile.open(tar_name, 'w:gz') as tar:
+        tar.add('.')
+    return open(tar_name)
+
+
+def find_metadata(directory, toplevel):
+    """
+    :type directory: str
+    :rtype: dict
+    """
+    if len(os.path.abspath(directory)) < len(os.path.abspath(toplevel)):
+        raise APIException('could not find metadata file in '
+                           'directory: {}'.format(toplevel))
+    try:
+        md = open(os.path.join(directory, 'metadata.yml'))
+    except IOError:
+        return find_metadata(os.path.join(directory, '..'), toplevel)
+    return yaml.load(md)
+
+
+@contextmanager
+def chdir(directory):
+    old_wd = os.getcwd()
+    try:
+        os.chdir(directory)
+        yield
+    finally:
+        os.chdir(old_wd)
