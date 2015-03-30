@@ -108,6 +108,9 @@ class Namespace(object):
         self.namespace = namespace
         self._ns_info = None
 
+    def __repr__(self):
+        return 'Namespace({})'.format(self.namespace)
+
     @property
     def services(self):
         srvs = self.adama.get_json(
@@ -171,6 +174,10 @@ class Service(object):
         self.service = service
         self._srv_info = None
         self._version = '0.1'
+
+    def __repr__(self):
+        return 'Service({}/{}_{})'.format(
+            self._namespace.namespace, self.service, self._version)
 
     def __getitem__(self, item):
         self._version = item
