@@ -179,7 +179,7 @@ class Services(list):
             return self.adama.error(response.text, response)
         if json_response['status'] != 'success':
             return self.adama.error(json_response['message'], json_response)
-        return Service(self.namespace, name)
+        return Service(Namespace(self.adama, self.namespace), name)
 
 
 class Service(object):
