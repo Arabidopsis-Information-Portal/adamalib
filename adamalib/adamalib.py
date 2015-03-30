@@ -195,9 +195,13 @@ class Service(object):
         self._srv_info = None
         self._version = '0.1'
 
-    def __repr__(self):
-        return 'Service({}/{}_{})'.format(
+    @property
+    def _full_name(self):
+        return '/{}/{}_v{}'.format(
             self._namespace.namespace, self.service, self._version)
+
+    def __repr__(self):
+        return 'Service({})'.format(self._full_name)
 
     def __getitem__(self, item):
         self._version = item
@@ -207,8 +211,7 @@ class Service(object):
         """
         :rtype: dict
         """
-        info = self._namespace.adama.get_json('/{}/{}_v{}'.format(
-            self._namespace.namespace, self.service, self._version))
+        info = self._namespace.adama.get_json(self._full_name)
         self.__dict__.update(info['result']['service'])
         return info
 
