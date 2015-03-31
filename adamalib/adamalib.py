@@ -175,10 +175,10 @@ class Services(list):
         :rtype: Service|None
         """
         # TODO: if mod is a string, register as a git repo
-        code, name, typ = find_code(mod)
+        code, name, typ, md_path = find_code(mod)
         response = self.adama.post(
             '/{}/services'.format(self.namespace),
-            files={'code': code}, data={'type': typ})
+            files={'code': code}, data={'type': typ, 'metadata': md_path})
         try:
             json_response = response.json()
         except ValueError:
@@ -314,15 +314,16 @@ class Utils(object):
 def find_code(mod):
     """
     :type mod: module
-    :rtype: (file, str, str)
+    :rtype: (file, str, str, str)
     """
     mod_dir = os.path.dirname(os.path.abspath(mod.__file__))
     toplevel_dir = git_top_level(mod_dir)
     code = pack(toplevel_dir)
     metadata = find_metadata(mod_dir, toplevel_dir)
-    name = metadata['name']
-    typ = metadata['type']
-    return code, name, typ
+    md_dict = yaml.load(open(metadata))
+    name = md_dict['name']
+    typ = md_dict['type']
+    return code, name, typ, os.path.dirname(metadata)[len(toplevel_dir)+1:]
 
 
 def git_top_level(directory):
@@ -354,16 +355,16 @@ def pack(directory):
 def find_metadata(directory, toplevel):
     """
     :type directory: str
-    :rtype: dict
+    :rtype: str
     """
     if len(os.path.abspath(directory)) < len(os.path.abspath(toplevel)):
         raise APIException('could not find metadata file in '
                            'directory: {}'.format(toplevel))
     try:
-        md = open(os.path.join(directory, 'metadata.yml'))
+        md = os.path.join(directory, 'metadata.yml')
     except IOError:
         return find_metadata(os.path.join(directory, '..'), toplevel)
-    return yaml.load(md)
+    return md
 
 
 @contextmanager
