@@ -5,9 +5,13 @@ import subprocess
 from contextlib import contextmanager
 import tarfile
 import tempfile
+import time
 
 import requests
 import yaml
+
+
+REGISTER_TIMEOUT = 30  # seconds
 
 
 class APIException(Exception):
@@ -164,11 +168,13 @@ class Services(list):
         self.adama = adama
         self.namespace = namespace
 
-    def add(self, mod):
+    def add(self, mod, async=False, timeout=REGISTER_TIMEOUT):
         """
         :type mod: module
-        :rtype: Service
+        :type async: bool
+        :rtype: Service|None
         """
+        # TODO: if mod is a string, register as a git repo
         code, name, typ = find_code(mod)
         response = self.adama.post(
             '/{}/services'.format(self.namespace),
@@ -179,7 +185,19 @@ class Services(list):
             return self.adama.error(response.text, response)
         if json_response['status'] != 'success':
             return self.adama.error(json_response['message'], json_response)
-        return Service(Namespace(self.adama, self.namespace), name)
+        srv = Service(Namespace(self.adama, self.namespace), name)
+        if async:
+            return srv
+        else:
+            t = time.time()
+            while True:
+                if time.time() - t > timeout:
+                    return self.adama.error('timeout registering service')
+                if getattr(srv, '_error', None):
+                    return self.adama.error(srv._message)
+                if srv.name is not None:
+                    return srv
+                time.sleep(0.5)
 
 
 class Service(object):
@@ -212,17 +230,28 @@ class Service(object):
         :rtype: dict
         """
         info = self._namespace.adama.get_json(self._full_name)
-        self.__dict__.update(info['result']['service'])
-        return info
+        result = info['result']
+        if result.get('slot') == 'error':
+            self._message = result['msg']
+            self._error = True
+            return None
+        if result['service'] is not None:
+            self.__dict__.update(info['result']['service'])
+            return info
 
     def __getattr__(self, item):
         """
         :type item: str
         :rtype:
         """
-        if not item.startswith('_') and self._srv_info is None:
+        if item.startswith('_'):
+            return getattr(super(Service, self), item)
+        if self._srv_info is None:
             self._srv_info = self._preload()
-            return getattr(self, item)
+            if self._srv_info is not None:
+                return getattr(self, item)
+            else:
+                return None
         return Endpoint(self, item)
 
     def delete(self):
