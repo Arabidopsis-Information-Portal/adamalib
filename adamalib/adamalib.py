@@ -24,7 +24,7 @@ class APIException(Exception):
 # noinspection PyMethodMayBeStatic
 class Adama(object):
 
-    def __init__(self, token, url=None):
+    def __init__(self, token, url=None, verify=True):
         """
         :type token: str
         :type url: str
@@ -32,6 +32,7 @@ class Adama(object):
         """
         self.token = token
         self.url = url
+        self.verify = verify
 
     @property
     def utils(self):
@@ -54,7 +55,7 @@ class Adama(object):
         headers = kwargs.setdefault('headers', {})
         """:type : dict"""
         headers['Authorization'] = 'Bearer {}'.format(self.token)
-        return requests.get(self.url + url, **kwargs)
+        return requests.get(self.url + url, verify=self.verify, **kwargs)
 
     def get_json(self, url, **kwargs):
         """
@@ -73,14 +74,14 @@ class Adama(object):
         :type kwargs: dict
         :rtype: requests.Response
         """
-        return requests.post(self.url + url, **kwargs)
+        return requests.post(self.url + url, verify=self.verify, **kwargs)
 
     def delete(self, url):
         """
         :type url: str
         :rtype: None
         """
-        requests.delete(self.url + url)
+        requests.delete(self.url + url, verify=self.verify)
 
     @property
     def status(self):
@@ -305,7 +306,7 @@ class Utils(object):
         :type kwargs: dict[str, object]
         :rtype: requests.Response
         """
-        resp = requests.get(url, params=kwargs)
+        resp = requests.get(url, params=kwargs, verify=self.adama.verify)
         if not resp.ok:
             self.adama.error(resp.text, resp)
         return resp
