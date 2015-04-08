@@ -33,6 +33,7 @@ class Adama(object):
         self.token = token
         self.url = url
         self.verify = verify
+        self._prov = None
 
     @property
     def utils(self):
@@ -91,6 +92,9 @@ class Adama(object):
     def namespaces(self):
         nss = self.get_json('/namespaces')['result']
         return Namespaces(self, [Namespace(self, ns['name']) for ns in nss])
+
+    def prov(self, obj):
+        self._prov = obj
 
     def __getattr__(self, item):
         """
