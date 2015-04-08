@@ -148,6 +148,15 @@ class Namespace(object):
         self.__dict__.update(info['result'])
         return info
 
+    def delete(self):
+        """
+        :rtype: None
+        """
+        self.adama.delete('/{}'.format(self.namespace))
+        self._ns_info = None
+        self.namespace = '<deleted>'
+
+
     def __getattr__(self, item):
         """
         :type item: str
