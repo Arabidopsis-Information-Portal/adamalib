@@ -24,3 +24,4 @@ License
 
 Free software: MIT license
 
+.. _Adama: https://github.com/Arabidopsis-Information-Portal/adama
