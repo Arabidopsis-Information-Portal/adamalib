@@ -53,3 +53,4 @@ Free software: MIT license
 .. _Docker: https://docs.docker.com/installation/#installation
 .. _docker-compose: https://docs.docker.com/compose/install/
 .. _using adamalib in Docker: https://github.com/Arabidopsis-Information-Portal/adama#using-adamalib-in-docker
+.. _Jupyter: http://ipython.org/
