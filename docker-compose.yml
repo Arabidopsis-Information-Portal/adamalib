@@ -3,7 +3,7 @@
 adamalib:
   build: .
   ports:
-    - "80:8888"
+    - "8888:8888"
   environment:
     PASSWORD: adamalib
     USE_HTTP: 1
