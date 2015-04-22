@@ -24,14 +24,15 @@ class APIException(Exception):
 # noinspection PyMethodMayBeStatic
 class Adama(object):
 
-    def __init__(self, token, url=None, verify=True):
+    def __init__(self, url, token=None, verify=True):
         """
-        :type token: str
         :type url: str
+        :type token: str
+        :type verify: bool
         :rtype: None
         """
-        self.token = token
         self.url = url
+        self.token = token
         self.verify = verify
         self._prov = None
 
@@ -155,7 +156,6 @@ class Namespace(object):
         self.adama.delete('/{}'.format(self.namespace))
         self._ns_info = None
         self.namespace = '<deleted>'
-
 
     def __getattr__(self, item):
         """
