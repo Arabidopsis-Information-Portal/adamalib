@@ -1,0 +1,11 @@
+---
+
+adamalib:
+  build: .
+  ports:
+    - "80:8888"
+  environment:
+    PASSWORD: adamalib
+    USE_HTTP: 1
+  volumes:
+    - .:/notebooks/local
