@@ -14,15 +14,13 @@ Use `pip`::
 
 It'll be moved to PyPI as soon as it reaches some stability.
 
-As an alternative, see :ref:`indocker`.
+As an alternative, see `using adamalib in Docker`_  below.
 
 Quickstart
 ==========
 
 (coming soon)
 
-
-.. _indocker:
 
 Using adamalib in Docker
 ========================
@@ -54,3 +52,4 @@ Free software: MIT license
 .. _Adama: https://github.com/Arabidopsis-Information-Portal/adama
 .. _Docker: https://docs.docker.com/installation/#installation
 .. _docker-compose: https://docs.docker.com/compose/install/
+.. _using adamalib in Docker: https://github.com/Arabidopsis-Information-Portal/adama#using-adamalib-in-docker
