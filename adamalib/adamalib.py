@@ -324,6 +324,42 @@ class Utils(object):
             self.adama.error(resp.text, resp)
         return resp
 
+    def create(self, name, service_type, target=None, git=True):
+        """Create a stub for a service.
+
+        If the target is not given, it creates a directory ``name``. It
+        optionally can init a git repo.
+
+        :type name: str
+        :type service_type: str
+        :type target: str
+        :type git: bool
+        :rtype: str
+        """
+        if target is None:
+            target = os.path.abspath(name)
+
+        if not git:
+            try:
+                git_top_level(target)
+            except APIException:
+                raise APIException('directory "{}" is not inside a git repo. '
+                                   'Either execute this again inside a git '
+                                   'repo, or pass the option "git=True" to '
+                                   'initialize the directory as a git repo.'
+                                   .format(target))
+        else:
+            init_git(target)
+
+
+def init_git(directory):
+    """
+    :type directory: str
+    :rtype: None
+    """
+    with chdir(directory):
+        subprocess.check_call('git init'.split())
+
 
 def find_code(mod):
     """
