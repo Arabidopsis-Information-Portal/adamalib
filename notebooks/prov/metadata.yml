@@ -1,0 +1,39 @@
+---
+name: prov
+version: 0.1
+type: query
+sources:
+  - title: "BAR Arabidopsis AGI -> Annotation"
+    # maps to dcterms:description
+    description: "Most recent annotation for given AGI"
+    # optional - maps to dcterms:language
+    # valid values defined in RFC 4646
+    language: "en-ca"
+    # optional - maps to dcterms:modified and is used to describe when the resource was
+    # published or last updated. Recommended to use ISO 8601 encoding but will need to be
+    # permissive in accepting non-ISO 8601 dates
+    last_modified: "2015-04-17T09:44:56"
+    # Used to realize the Organization agent
+    sponsor_organization_name: "University of Toronto"
+    # optional - maps to dcterms:identifier in Agent
+    sponsor_uri: "http://www.utoronto.ca/"
+    # Used to realize the Person agent
+    provider_name: "Nicholas Provart"
+    # optional - maps to foaf:mbox in Agent
+    provider_email: "provart@utoronta.ca"
+    # Maps to dcterms:identifier in the Entity
+    uri: "http://bar.utoronto.ca/webservices/agiToAnnot.php"
+    # optional - maps to dcterms:license
+    # Allow simple string or URL
+    license: "Creative Commons 3.0"
+    sources:
+      - title: "TAIR"
+        description: "The Arabidopsis Information Resource"
+        language: "en-us"
+        # optional - maps to dcterms:bibliographicCitation
+        citation: "The Arabidopsis Information Resource (TAIR): improved gene annotation and new tools. Nucleic Acids Research 2011 doi: 10.1093/nar/gkr1090"
+        sponsor_organization_name: "Phoenix Bioinformatics"
+        provider_name: "Eva Huala"
+        # optional - maps to foaf:mbox in Agent
+        uri: "https://www.arabidopsis.org/"
+        sources: []
