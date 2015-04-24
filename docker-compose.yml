@@ -8,4 +8,5 @@ adamalib:
     PASSWORD: adamalib
     USE_HTTP: 1
   volumes:
-    - .:/notebooks/local
+    - .:/adamalib
+    - notebooks:/notebooks/local
