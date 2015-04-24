@@ -5,6 +5,7 @@ import subprocess
 from contextlib import contextmanager
 import tarfile
 import tempfile
+import textwrap
 import time
 
 import requests
@@ -337,8 +338,8 @@ class Utils(object):
         :rtype: str
         """
         if target is None:
-            target = os.path.abspath(name)
-
+            target = name
+        os.makedirs(target)
         if not git:
             try:
                 git_top_level(target)
@@ -350,6 +351,25 @@ class Utils(object):
                                    .format(target))
         else:
             init_git(target)
+        with chdir(target):
+            with open('metadata.yml', 'w') as md:
+                md.write(textwrap.dedent(
+                    """
+                    ---
+                    name: {}
+                    version: 0.1
+                    type: {}
+                    """.format(name, service_type)))
+            with open('main.py', 'w') as py:
+                py.write(textwrap.dedent(
+                    """
+                    import json
+
+                    def main(args, adama):
+                        print(json.dumps({'key': 'value'}))
+                    """))
+            with open('__init__.py', 'w'):
+                pass
 
 
 def init_git(directory):
