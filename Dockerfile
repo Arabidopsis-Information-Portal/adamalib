@@ -5,5 +5,6 @@ WORKDIR /adamalib
 RUN pip install -r requirements.txt
 RUN python setup.py develop
 
-COPY notebooks /notebooks
-WORKDIR /notebooks
+COPY notebooks/ /data
+RUN git init /data/prov
+WORKDIR /data
