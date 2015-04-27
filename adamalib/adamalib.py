@@ -300,9 +300,26 @@ class Endpoint(object):
             json_response = response.json()
             if json_response['status'] != 'success':
                 self.adama.error(json_response['message'], json_response)
-            return json_response['result']
+            return ProvList(json_response['result'],
+                            response.headers['Araport-Prov'],
+                            self.adama)
         else:
             return response
+
+
+class ProvList(list):
+
+    def __init__(self, result, prov_url, adama):
+        super(ProvList, self).__init__(result)
+        self.prov_url = prov_url
+        self.adama = adama
+
+    def prov(self, format='json'):
+        response = self.adama.utils.request(self.prov_url, format=format)
+        if format in ('json', 'sources'):
+            return response.json()
+        else:
+            return response.text
 
 
 class Utils(object):
