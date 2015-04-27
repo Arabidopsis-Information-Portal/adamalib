@@ -9,4 +9,4 @@ adamalib:
     USE_HTTP: 1
   volumes:
     - .:/adamalib
-    - notebooks:/notebooks/local
+    - notebooks:/data/local
