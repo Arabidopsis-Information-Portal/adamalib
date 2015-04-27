@@ -6,5 +6,5 @@ RUN pip install -r requirements.txt
 RUN python setup.py develop
 
 COPY notebooks/ /data
-RUN git init /data/prov
+RUN git init /data/provn
 WORKDIR /data
