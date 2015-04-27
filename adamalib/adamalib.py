@@ -314,12 +314,22 @@ class ProvList(list):
         self.prov_url = prov_url
         self.adama = adama
 
-    def prov(self, format='json'):
+    def prov(self, format='json', filename=None):
         response = self.adama.utils.request(self.prov_url, format=format)
         if format in ('json', 'sources'):
             return response.json()
-        else:
+        elif format == 'prov-n':
             return response.text
+        elif format == 'prov':
+            return None # needs to deserialize the object
+        elif format == 'png':
+            return png(response, filename)
+
+
+def png(data, filename):
+    # Return an IPython image if possible, or just the content of the png
+    # otherwise
+    pass
 
 
 class Utils(object):
