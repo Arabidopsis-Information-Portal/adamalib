@@ -2,6 +2,13 @@
 name: prov
 version: 0.1
 type: query
+authors:
+  - name: Foo Smith
+    email: foosmith@example.com
+    sponsor_organization_name: "Foo Univ"
+    sponsor_uri: "foo.example.com"
+  - name: Bar Baz
+    email: barbaz@example.com
 sources:
   - title: "BAR Arabidopsis AGI -> Annotation"
     # maps to dcterms:description
