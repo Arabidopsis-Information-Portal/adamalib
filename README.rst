@@ -43,8 +43,12 @@ with password ``adamalib``.  The notebook ``Example.ipynb`` contains a
 full example of use.  The notebook ``Provenance.ipynb`` contains an example of
 accessing provenance information from Python.
 
-.. note:: If you are running on a Mac with ``boot2docker``, substitute ``localhost`` by the IP of ``boot2docker``.  
-          Find such IP with:  ``boot2docker ip`` in the command line.
+**Note**: If you are running on a Mac with ``boot2docker``, substitute ``localhost`` by 
+the output of:
+
+.. code-block:: bash
+
+   $ boot2docker ip
 
 
 License
