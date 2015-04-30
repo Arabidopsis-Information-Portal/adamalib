@@ -326,13 +326,24 @@ class ProvList(list):
             return ProvDocument.deserialize(
                 content=json.dumps(response.json()))
         elif format == 'png':
-            return png(response, filename)
+            return png(response.content, filename)
 
 
 def png(data, filename):
     # Return an IPython image if possible, or just the content of the png
     # otherwise
-    pass
+    if filename is not None:
+        with open(filename, 'w') as out:
+            out.write(data)
+    else:
+        try:
+            if __IPYTHON__:
+                import IPython.display
+                return IPython.display.Image(data=data)
+        except NameError:
+            pass
+        return data
+
 
 
 class Utils(object):
