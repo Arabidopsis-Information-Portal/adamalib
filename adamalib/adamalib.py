@@ -7,9 +7,11 @@ import tarfile
 import tempfile
 import textwrap
 import time
+import json
 
 import requests
 import yaml
+from prov.model import ProvDocument
 
 
 REGISTER_TIMEOUT = 30  # seconds
@@ -321,7 +323,8 @@ class ProvList(list):
         elif format == 'prov-n':
             return response.text
         elif format == 'prov':
-            return None # needs to deserialize the object
+            return ProvDocument.deserialize(
+                content=json.dumps(response.json()))
         elif format == 'png':
             return png(response, filename)
 
