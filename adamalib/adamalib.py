@@ -303,10 +303,14 @@ class Endpoint(object):
             if json_response['status'] != 'success':
                 self.adama.error(json_response['message'], json_response)
             return ProvList(json_response['result'],
-                            response.headers['Araport-Prov'],
+                            get_prov_uri(response),
                             self.adama)
         else:
             return response
+
+
+def get_prov_uri(response):
+    return response.links["http://www.w3.org/ns/prov#has_provenance"]['url']
 
 
 class ProvList(list):
