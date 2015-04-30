@@ -2,6 +2,7 @@
 name: prov
 version: 0.1
 type: query
+main_module: main.py
 authors:
   - name: Foo Smith
     email: foosmith@example.com
