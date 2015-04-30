@@ -16,11 +16,6 @@ It'll be moved to PyPI as soon as it reaches some stability.
 
 As an alternative, see `using adamalib in Docker`_  below.
 
-Quickstart
-==========
-
-(coming soon)
-
 
 Using adamalib in Docker
 ========================
@@ -37,11 +32,19 @@ Then, clone this repository and execute ``docker-compose`` as follows:
 
    $ git clone https://github.com/Arabidopsis-Information-Portal/adamalib.git
    $ cd adamalib
+   $ docker-compose build
    $ docker-compose up
+
+(a bug in ``docker-compose`` requires doing the steps ``build`` and ``up`` separately. 
+In the future, only ``up`` will be necessary.)
 
 Navigate to http://localhost:8888 and access the Jupyter_ notebook
 with password ``adamalib``.  The notebook ``Example.ipynb`` contains a
-full example of use.
+full example of use.  The notebook ``Provenance.ipynb`` contains an example of
+accessing provenance information from Python.
+
+.. note:: If you are running on a Mac with ``boot2docker``, substitute ``localhost`` by the IP of ``boot2docker``.  
+          Find such IP with:  ``boot2docker ip`` in the command line.
 
 
 License
