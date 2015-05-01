@@ -310,7 +310,11 @@ class Endpoint(object):
 
 
 def get_prov_uri(response):
-    return response.links["http://www.w3.org/ns/prov#has_provenance"]['url']
+    try:
+        prov_link = "http://www.w3.org/ns/prov#has_provenance"
+        return response.links[prov_link]['url']
+    except KeyError:
+        return None
 
 
 class ProvList(list):
@@ -321,6 +325,8 @@ class ProvList(list):
         self.adama = adama
 
     def prov(self, format='json', filename=None):
+        if self.prov_url is None:
+            raise APIException('no provenance information found')
         response = self.adama.utils.request(self.prov_url, format=format)
         if format in ('json', 'sources'):
             return response.json()
@@ -347,7 +353,6 @@ def png(data, filename):
         except NameError:
             pass
         return data
-
 
 
 class Utils(object):
