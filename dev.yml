@@ -1,0 +1,14 @@
+---
+
+adamalib:
+  build: .
+  ports:
+    - "8888:8888"
+  environment:
+    PASSWORD: adamalib
+    USE_HTTP: 1
+    PYTHONPATH: /data/adama
+  volumes:
+    - .:/adamalib
+    - notebooks:/data/local
+    - ../adama:/data/adama
