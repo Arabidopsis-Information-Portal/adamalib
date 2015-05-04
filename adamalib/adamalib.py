@@ -142,7 +142,8 @@ class Namespace(object):
         srvs = self.adama.get_json(
             '/{}/services'.format(self.namespace))['result']
         return Services(self.adama, self.namespace,
-                        [Service(self, srv['name']) for srv in srvs])
+                        [Service(self, srv['name'], srv['version'])
+                         for srv in srvs])
 
     def _preload(self):
         """
@@ -219,7 +220,7 @@ class Services(list):
 
 class Service(object):
 
-    def __init__(self, namespace, service):
+    def __init__(self, namespace, service, version='0.1'):
         """
         :type namespace: Namespace
         :type service: str
@@ -228,7 +229,7 @@ class Service(object):
         self._namespace = namespace
         self.service = service
         self._srv_info = None
-        self._version = '0.1'
+        self._version = version
 
     @property
     def _full_name(self):
