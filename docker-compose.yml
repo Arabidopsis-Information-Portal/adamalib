@@ -10,3 +10,4 @@ adamalib:
   volumes:
     - .:/adamalib
     - notebooks:/data/local
+    - /Users/wmoreira/TACC/adama:/data/adama

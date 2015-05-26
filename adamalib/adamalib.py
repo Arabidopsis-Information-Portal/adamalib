@@ -410,6 +410,7 @@ class Utils(object):
                     name: {}
                     version: 0.1
                     type: {}
+                    main_module: main.py
                     """.format(name, service_type)))
             with open('main.py', 'w') as py:
                 py.write(textwrap.dedent(
