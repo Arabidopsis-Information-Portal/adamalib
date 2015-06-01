@@ -107,6 +107,13 @@ class Adama(object):
         """
         return Namespace(self, item)
 
+    def __getitem__(self, item):
+        """
+        :type item: str
+        :rtype: Namespace
+        """
+        return getattr(self, item)
+
 
 class Namespaces(list):
 
