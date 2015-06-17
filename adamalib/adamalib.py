@@ -51,8 +51,9 @@ class Adama(object):
         """
         raise APIException(message, obj)
 
-    def get(self, url, **kwargs):
+    def _auth_request(self, method, url, **kwargs):
         """
+        :type method: str
         :type url: str
         :type kwargs: dict[str, object]
         :rtype: requests.Response
@@ -60,7 +61,18 @@ class Adama(object):
         headers = kwargs.setdefault('headers', {})
         """:type : dict"""
         headers['Authorization'] = 'Bearer {}'.format(self.token)
-        return requests.get(self.url + url, verify=self.verify, **kwargs)
+        fun = getattr(requests, method)
+        response = fun(self.url + url, verify=self.verify, **kwargs)
+        response.raise_for_status()
+        return response
+
+    def get(self, url, **kwargs):
+        """
+        :type url: str
+        :type kwargs: dict[str, object]
+        :rtype: requests.Response
+        """
+        return self._auth_request('get', url, **kwargs)
 
     def get_json(self, url, **kwargs):
         """
@@ -79,14 +91,14 @@ class Adama(object):
         :type kwargs: dict
         :rtype: requests.Response
         """
-        return requests.post(self.url + url, verify=self.verify, **kwargs)
+        return self._auth_request('post', url, **kwargs)
 
     def delete(self, url):
         """
         :type url: str
         :rtype: None
         """
-        requests.delete(self.url + url, verify=self.verify)
+        return self._auth_request('delete', url)
 
     @property
     def status(self):
