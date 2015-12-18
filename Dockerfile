@@ -11,6 +11,7 @@ RUN /opt/conda/envs/python2/bin/pip install six
 RUN /opt/conda/envs/python2/bin/pip install -r requirements.txt
 RUN /opt/conda/envs/python2/bin/python setup.py develop
 
-COPY notebooks/ /data
+COPY notebooks/ /notebooks
+RUN chown -R jovyan /notebooks
 RUN git init /data/provn
-WORKDIR /data
+WORKDIR /adamalib
