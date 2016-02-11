@@ -10,12 +10,13 @@ Installation
 
 Use `pip`::
 
+  pip install adamalib
+
+Alternatively, install from the git repo using `pip`::
+
   pip install git+git://github.com/Arabidopsis-Information-Portal/adamalib.git
 
-It'll be moved to PyPI as soon as it reaches some stability.
-
-As an alternative, see `using adamalib in Docker`_  below.
-
+As another alternative, see `using adamalib in Docker`_  below.
 
 Using adamalib in Docker
 ========================
@@ -49,7 +50,6 @@ the output of:
 .. code-block:: bash
 
    $ boot2docker ip
-
 
 License
 =======
