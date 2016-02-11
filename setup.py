@@ -27,6 +27,7 @@ if sys.argv[-1] == 'publish':
     sys.exit()
 
 readme = open('README.rst').read()
+requires = [pkg for pkg in open('requirements.txt').readlines()]
 
 setup(
     author='John Gentle',
@@ -43,11 +44,11 @@ setup(
         'Programming Language :: Python :: 3.3',
     ],
     cmdclass={'test': PyTest},
+    data_files=[('', ['requirements.txt'])],
     description='Adama Library',
     download_url='https://github.com/Arabidopsis-Information-Portal/adamalib',
     include_package_data=True,
-    install_requires=[
-    ],
+    install_requires=requires,
     keywords='adamalib',
     license="BSD",
     long_description=readme,
