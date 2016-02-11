@@ -43,13 +43,16 @@ setup(
         'Programming Language :: Python :: 3.3',
     ],
     cmdclass={'test': PyTest},
-    description='Adama library',
+    description='Adama Library',
+    download_url='https://github.com/Arabidopsis-Information-Portal/adamalib',
     include_package_data=True,
     install_requires=[
     ],
     keywords='adamalib',
     license="BSD",
     long_description=readme,
+    maintainer='John Gentle',
+    maintainer_email='jgentle@tacc.utexas.edu',
     name='adamalib',
     packages=[
         'adamalib',
