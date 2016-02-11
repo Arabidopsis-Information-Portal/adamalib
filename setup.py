@@ -29,24 +29,8 @@ if sys.argv[-1] == 'publish':
 readme = open('README.rst').read()
 
 setup(
-    name='adamalib',
-    version='0.1.0',
-    description='Adama library',
-    long_description=readme,
-    author='Walter Moreira',
-    author_email='walter@waltermoreira.net',
-    url='https://github.com/waltermoreira/adamalib',
-    packages=[
-        'adamalib',
-    ],
-    package_dir={'adamalib':
-                 'adamalib'},
-    include_package_data=True,
-    install_requires=[
-    ],
-    license="MIT",
-    zip_safe=False,
-    keywords='adamalib',
+    author='John Gentle',
+    author_email='jgentle@tacc.utexas.edu',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -59,6 +43,21 @@ setup(
         'Programming Language :: Python :: 3.3',
     ],
     cmdclass={'test': PyTest},
+    description='Adama library',
+    include_package_data=True,
+    install_requires=[
+    ],
+    keywords='adamalib',
+    license="BSD",
+    long_description=readme,
+    name='adamalib',
+    packages=[
+        'adamalib',
+    ],
+    package_dir={'adamalib': 'adamalib'},
     tests_require=['pytest'],
     test_suite='tests',
+    url='https://github.com/Arabidopsis-Information-Portal/adamalib',
+    version='0.1.0',
+    zip_safe=False,
 )

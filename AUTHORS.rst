@@ -5,9 +5,9 @@ Credits
 Development Lead
 ----------------
 
-* Walter Moreira <walter@waltermoreira.net>
+* John Gentle <jgentle@tacc.utexas.edu>)
 
 Contributors
 ------------
 
-None yet. Why not be the first?
+* Walter Moreira <walter@waltermoreira.net>
