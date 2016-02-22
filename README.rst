@@ -54,7 +54,7 @@ the output of:
 License
 =======
 
-Free software: BSD license
+Free software: MIT
 
 .. _Adama: https://github.com/Arabidopsis-Information-Portal/adama
 .. _Docker: https://docs.docker.com/installation/#installation
